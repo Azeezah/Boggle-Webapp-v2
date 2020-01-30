@@ -34,7 +34,7 @@ class Game extends Component {
     const solutions = new Set(findAllSolutions(grid, valid_words['words']))
     this.state = {
       guess: '',
-      correctGuesses: ["cat", "dogs"],
+      correctGuesses: [],
       guesses: [],
       grid: grid,
       allSolutions: solutions,
