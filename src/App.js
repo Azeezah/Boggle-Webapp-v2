@@ -1,34 +1,23 @@
-/*
-Click button,
-open board
-play again
-show words found
- */
-
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
-import Board from './Board';
+import Game from './Game';
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {playing:false}
+  }
+  startPlaying = () => {this.setState({playing:true})}
+  stopPlaying = () => {this.setState({playing:false})}
+
   render() {
+    const startButton = (<button onClick={this.startPlaying}>Start</button>)
+    const stopButton = (<button onClick={this.stopPlaying}>Stop</button>)
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          <Board />
-        </header>
+      <div>
+        { this.state.playing ? stopButton : startButton }
+        { this.state.playing ? <Game /> : null }
       </div>
     );
   }
