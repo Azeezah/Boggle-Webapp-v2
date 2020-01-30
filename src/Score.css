@@ -1,0 +1,8 @@
+.wordlist .incorrect {
+  color: red;
+}
+
+.wordlist .correct {
+  color: green;
+  font-size: 500%;
+}

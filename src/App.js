@@ -13,7 +13,7 @@ class App extends Component {
 
   render() {
     const startButton = (<button onClick={this.startPlaying}>Start</button>)
-    const stopButton = (<button onClick={this.stopPlaying}>Stop</button>)
+    const stopButton = (<button onClick={this.stopPlaying}>Home</button>)
     return (
       <div>
         { this.state.playing ? stopButton : startButton }

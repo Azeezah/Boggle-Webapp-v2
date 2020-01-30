@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Board from './Board';
 import findAllSolutions from'./boggle_solver';
 import valid_words from './full-wordlist';
+import Score from './Score';
 
 // Returns a random 5x5 board, using the official letter distribution.
 function RandomGrid() {
@@ -36,7 +37,9 @@ class Game extends Component {
       correctGuesses: ["cat", "dogs"],
       guesses: [],
       grid: grid,
-      allSolutions: solutions
+      allSolutions: solutions,
+      scoredWords:[],
+      isFinished:false,
     };
   }
   changeGuess = (e) => {
@@ -58,14 +61,31 @@ class Game extends Component {
     this.setState({guess: ''})
   }
 
+  finishGame = () => {
+    const allSolutions = this.state.allSolutions
+    const correctGuesses = this.state.correctGuesses
+    var scoredWords = []
+    for (var word of allSolutions) {
+      if (correctGuesses.includes(word)) {
+        scoredWords.push({correct:true, text:word})
+      } else {
+        scoredWords.push({correct:false, text:word})
+      }
+    }
+    this.setState({scoredWords:scoredWords})
+    this.setState({isFinished:true})
+  }
   render() {
     const correctGuesses = this.state.correctGuesses.map((item, key)=>
       <span>{item}<br /></span>
     );
+    const isFinished = this.state.isFinished;
+    const scoredWords = this.state.scoredWords;
 
     return (
       <div>
         <Board board={this.state.grid}/>
+        <button onClick={this.finishGame}>Stop</button>
         <form autocomplete="off">
           <input
             name='guess'
@@ -73,7 +93,7 @@ class Game extends Component {
             onChange={(e) => this.changeGuess(e)} />
           <button hidden onClick={(e) => this.submitGuess(e)}>Guess</button>
         </form>
-        {correctGuesses}
+        {isFinished ? <Score words={scoredWords} /> : correctGuesses}
       </div>
     )
   }
