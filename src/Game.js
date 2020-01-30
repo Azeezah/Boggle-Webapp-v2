@@ -1,24 +1,34 @@
-import React, { Component } from 'react';
-//import logo from './logo.svg';
-import './Game.css';
-
-var board = [['a', 'b', 'c'],['d', 'e', 'f'],['g', 'h', 'i']]
+import React, {Component,} from 'react';
+import Board from './Board';
 
 class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      guess: ''
+    };
+  }
+  changeGuess = (e) => {
+    this.setState({[e.target.name]:e.target.value})
+  }
+  submitGuess = (e) => {
+    e.preventDefault();
+    this.setState({guess: ''})
+  }
+
   render() {
     return (
-      <div className="Game">
-      <table>
-      {board.map((row, i) => {
-        return (
-          <tr>
-          {row.map((elem, j)=>{
-            return <td key={i}>{elem}</td>
-          })}
-          </tr>)})}
-      </table>
+      <div>
+        <Board />
+        <form>
+          <input
+            name='guess'
+            value={this.state.guess}
+            onChange={(e) => this.changeGuess(e)} />
+          <button hidden onClick={(e) => this.submitGuess(e)}>Guess</button>
+        </form>
       </div>
-    );
+    )
   }
 }
 
