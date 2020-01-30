@@ -3,6 +3,7 @@ import Board from './Board';
 import findAllSolutions from'./boggle_solver';
 import valid_words from './full-wordlist';
 import Score from './Score';
+import Timer from './Timer';
 
 // Returns a random 5x5 board, using the official letter distribution.
 function RandomGrid() {
@@ -40,7 +41,9 @@ class Game extends Component {
       allSolutions: solutions,
       scoredWords:[],
       isFinished:false,
+      seconds: 30,
     };
+    setTimeout(this.finishGame, this.state.seconds*1000)
   }
   changeGuess = (e) => {
     this.setState({[e.target.name]:e.target.value})
@@ -84,6 +87,7 @@ class Game extends Component {
 
     return (
       <div>
+        <Timer seconds={this.state.seconds} />
         <Board board={this.state.grid}/>
         <button onClick={this.finishGame}>Stop</button>
         <form autocomplete="off">

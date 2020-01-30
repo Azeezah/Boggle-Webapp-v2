@@ -5,7 +5,7 @@ class Board extends Component {
   render() {
     const board = this.props.board;
     return (
-      <div className="Board">
+      <div class="board">
       <table>
       {board.map((row, i) => {
         return (
