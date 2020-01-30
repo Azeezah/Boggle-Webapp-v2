@@ -15,9 +15,12 @@ class App extends Component {
     const startButton = (<button onClick={this.startPlaying}>Start</button>)
     const stopButton = (<button onClick={this.stopPlaying}>Home</button>)
     return (
-      <div>
+      <div class="app">
+      <center>
+        <h1 class="appTitle">BOGGLE</h1>
         { this.state.playing ? stopButton : startButton }
         { this.state.playing ? <Game /> : null }
+      </center>
       </div>
     );
   }
