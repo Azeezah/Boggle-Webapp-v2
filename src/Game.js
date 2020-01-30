@@ -33,7 +33,8 @@ class Game extends Component {
     const solutions = new Set(findAllSolutions(grid, valid_words['words']))
     this.state = {
       guess: '',
-      guesses: ["cat", "dogs"],
+      correctGuesses: ["cat", "dogs"],
+      guesses: [],
       grid: grid,
       allSolutions: solutions
     };
@@ -45,15 +46,20 @@ class Game extends Component {
     e.preventDefault();
     const guess = this.state.guess
     const guesses = this.state.guesses
+    const correctGuesses = this.state.correctGuesses
     const allSolutions = this.state.allSolutions
-    if (allSolutions.has(guess)) {
-      this.setState({guesses:([...guesses, guess])})
+    if (guesses.includes(guess)) {
+      alert("You said that already!");
     }
+    else if (allSolutions.has(guess)) {
+      this.setState({correctGuesses:[...correctGuesses, guess]})
+    }
+    this.setState({guesses:[...guesses, guess]})
     this.setState({guess: ''})
   }
 
   render() {
-    const guesses = this.state.guesses.map((item, key)=>
+    const correctGuesses = this.state.correctGuesses.map((item, key)=>
       <span>{item}<br /></span>
     );
 
@@ -67,7 +73,7 @@ class Game extends Component {
             onChange={(e) => this.changeGuess(e)} />
           <button hidden onClick={(e) => this.submitGuess(e)}>Guess</button>
         </form>
-        {guesses}
+        {correctGuesses}
       </div>
     )
   }
