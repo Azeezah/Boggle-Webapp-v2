@@ -17,5 +17,9 @@
       }
     ]
   },
-  "emulators": {}
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    }
+  }
 }
