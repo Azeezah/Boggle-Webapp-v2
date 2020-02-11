@@ -37,7 +37,7 @@ class Game extends Component {
       guess: '',
       correctGuesses: [],
       guesses: [],
-      grid: this.props.grid || grid,
+      grid: this.props.board.grid || grid,
       allSolutions: solutions,
       scoredWords:[],
       isFinished:false,
