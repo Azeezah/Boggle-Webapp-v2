@@ -19,7 +19,7 @@ function toBoard(str) {
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {playing:false, user:null, board:null}
+    this.state = {playing:false, user:null, board:null, loadChallenge:false}
   }
   startPlaying = () => {this.setState({playing:true})}
   stopPlaying = () => {this.setState({playing:false})}
@@ -48,6 +48,8 @@ class App extends Component {
     const startButton = (<button onClick={this.startPlaying}>Start</button>)
     const stopButton = (<button onClick={this.stopPlaying}>Home</button>)
     const user = this.state.user;
+    const loadChallengesButton = (<button onClick={this.stopPlaying}>Home</button>)
+
     const diffButtons =(<>
       <br /><button onClick={this.playEasy}>Easy</button>
       <br /><button onClick={this.playMedium}>Medium</button>
@@ -61,7 +63,8 @@ class App extends Component {
         {user != null && <p>Welcome, {user.displayName} ({user.email})</p>}
         { this.state.playing ? stopButton : startButton }
         { this.state.playing ? <Game grid={this.state.board} /> : null }
-        { this.state.playing ? null : diffButtons }
+        <button onClick={()=>{this.setState({loadChallenge:!this.state.loadChallenge})}}>Load Challenge</button>
+        { !this.state.playing && this.state.loadChallenge ? diffButtons : null }
       </center>
       </div>
     );
