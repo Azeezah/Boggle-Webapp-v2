@@ -4,6 +4,7 @@ import findAllSolutions from'./boggle_solver';
 import valid_words from './full-wordlist';
 import Score from './Score';
 import Timer from './Timer';
+import firebase from 'firebase';
 
 // Returns a random 5x5 board, using the official letter distribution.
 function RandomGrid() {
@@ -28,12 +29,39 @@ function RandomGrid() {
    return grid;
 }
 
+function saveToScoreboard(nickname, score, difficulty) {
+  const db = firebase.firestore()
+  if (["easy", "medium", "hard"].includes(difficulty)) {
+    db.collection("boards").doc(difficulty).get().then(
+      (doc) => {
+      db.collection("boards").doc(difficulty).set({
+        elems: doc.data().elems,
+        highscore: Math.max(doc.data().highscore, score),
+      })
+    })
+  }
+  db.collection("scores").doc(Math.random().toString()).set({
+    score: score,
+    nickname: nickname,
+  })
+}
+
+function generateEponym() {
+  const adjectives = ["Eponymous", "Anonymous", "Claustrophobic", "Unidentified", "Unnamed", "Unknown", "Incognito", "Mysterious", "Compiler"]
+  const names = ["Johann", "Sebastian", "Bach", "George", "Frideric", "Handel", "Cornelius", "Hop", "Gunther", "Jacob", "Wenceslaus"]
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)]
+  const name = names[Math.floor(Math.random() * names.length)]
+  return adj + " " + name
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
     const grid = RandomGrid()
     const solutions = new Set(findAllSolutions(grid, valid_words['words']))
+    const anonymous = generateEponym()
     this.state = {
+      user: this.props.user || anonymous,
       guess: '',
       correctGuesses: [],
       guesses: [],
@@ -77,6 +105,8 @@ class Game extends Component {
     }
     this.setState({scoredWords:scoredWords})
     this.setState({isFinished:true})
+    const score = correctGuesses.map((a)=>a.length).reduce((a, b)=>a+b)
+    saveToScoreboard(this.state.user, score, (this.props.board ? this.props.board.name : null))
   }
   render() {
     const correctGuesses = this.state.correctGuesses.map((item, key)=>

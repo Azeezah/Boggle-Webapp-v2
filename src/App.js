@@ -5,12 +5,14 @@ import Game from './Game';
 import LoginButton from './LoginButton.js';
 import firebase from 'firebase';
 import firebaseApp from './firebase.js';
+import Leaderboard from './Leaderboard';
 
- const db = firebaseApp.firestore();
+const db = firebaseApp.firestore();
 
- db.settings({
+db.settings({
    timestampsInSnapshots: true
- });
+});
+
 function toBoard(str) {
   let arr = str.split("")
   return [arr.slice(0,5), arr.slice(5,10), arr.slice(10,15), arr.slice(15,20), arr.slice(20,25)]
@@ -25,17 +27,25 @@ class App extends Component {
         easy:{highscore:12},
         medium:{highscore:12},
         hard:{highscore:12}
-      }
+      },
+      highscores:[]
     }
     db.collection("boards").get().then((snapshot) => {
-      console.log(snapshot.docs)
       snapshot.docs.forEach((doc)=>{
         let name = doc._key.path.segments[6]
         this.state.boards[name].highscore = doc.data().highscore
         this.state.boards[name].grid = toBoard(doc.data().elems)
         this.state.boards[name].name = name
       })
-      console.log(this.state.boards)
+    })
+    db.collection("scores").get().then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        if (doc.data().score) {
+          this.state.highscores.push(doc.data())
+        }
+      })
+      this.state.highscores.sort((a, b) => (a.score < b.score) ? 1 : -1)
+      this.state.highscores = this.state.highscores.slice(0,10)
     })
   }
   startPlaying = () => {this.setState({playing:true})}
@@ -57,18 +67,18 @@ class App extends Component {
       <br /><button onClick={this.playEasy}>Easy</button>Highscore: {this.state.boards.easy.highscore}
       <br /><button onClick={this.playMedium}>Medium</button>Highscore: {this.state.boards.medium.highscore}
       <br /><button onClick={this.playHard}>Hard</button>Highscore: {this.state.boards.hard.highscore}
-
     </>)
     return (
-      <div class="app">
+      <div className="app">
       <center>
-        <h1 class="appTitle">BOGGLE</h1>
+        <h1 className="appTitle">BOGGLE</h1>
         <LoginButton setUser={(user)=>this.setState({user:user})} />
         {user != null && <p>Welcome, {user.displayName} ({user.email})</p>}
         { this.state.playing ? stopButton : startButton }
-        { this.state.playing ? <Game board={this.state.board} /> : null }
-        <button onClick={()=>{this.setState({loadChallenge:!this.state.loadChallenge})}}>Load Challenge</button>
+        { this.state.playing ? <Game board={this.state.board} user={user? user.displayName : null} /> : null }
+        { this.state.playing ? null : <button onClick={()=>{this.setState({loadChallenge:!this.state.loadChallenge})}}>Load Challenge</button> }
         { !this.state.playing && this.state.loadChallenge ? diffButtons : null }
+        { this.state.playing ? null : <Leaderboard scores={this.state.highscores} />}
       </center>
       </div>
     );
