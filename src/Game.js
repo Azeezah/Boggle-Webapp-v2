@@ -105,7 +105,7 @@ class Game extends Component {
     }
     this.setState({scoredWords:scoredWords})
     this.setState({isFinished:true})
-    const score = correctGuesses.map((a)=>a.length).reduce((a, b)=>a+b)
+    const score = correctGuesses.map((a)=>a.length).reduce(((a, b)=>a+b), 0)
     saveToScoreboard(this.state.user, score, (this.props.board ? this.props.board.name : null))
   }
   render() {

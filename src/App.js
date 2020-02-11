@@ -45,7 +45,7 @@ class App extends Component {
         }
       })
       this.state.highscores.sort((a, b) => (a.score < b.score) ? 1 : -1)
-      this.state.highscores = this.state.highscores.slice(0,10)
+      this.setState({highscores:this.state.highscores.slice(0,5)})
     })
   }
   startPlaying = () => {this.setState({playing:true})}

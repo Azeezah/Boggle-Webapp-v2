@@ -11,6 +11,11 @@ body {
   background-size: cover;
 }
 
+h2 {
+  color: white;
+  font-size: 200%;
+}
+
 .appTitle {
    font-family: bubblyfont;
    color: white;
